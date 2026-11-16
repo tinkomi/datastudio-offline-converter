@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DataStudio Lite — Offline Data Converter & Table Formatter</title>
+  <title id="pageTitle">DataStudio Lite — Offline Data Converter & Table Formatter</title>
   <style>
     :root {
       --bg: #0b0f19;
@@ -23,9 +23,13 @@
     header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
     .logo { font-size: 20px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
     .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid var(--primary); }
+    .lang-switcher { display: flex; align-items: center; gap: 6px; }
+    .lang-select { background: #111827; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; outline: none; }
+    .lang-select:focus { border-color: var(--primary); }
+    
     .pro-banner { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15)); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
     .pro-banner p { font-size: 13px; color: #e5e7eb; }
-    .pro-btn { background: linear-gradient(135deg, #3b82f6, #10b981); color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; transition: opacity 0.2s; }
+    .pro-btn { background: linear-gradient(135deg, #3b82f6, #10b981); color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; transition: opacity 0.2s; white-space: nowrap; }
     .pro-btn:hover { opacity: 0.9; }
     
     .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
@@ -52,7 +56,7 @@
     th { background: #131b2c; color: #9ca3af; font-weight: 600; position: sticky; top: 0; }
     tr:hover td { background: rgba(59, 130, 246, 0.05); }
     
-    .status-bar { margin-top: 10px; font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .status-bar { margin-top: 10px; font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
   </style>
 </head>
 <body>
@@ -63,57 +67,69 @@
         <span>DataStudio Lite</span>
         <span class="badge">Offline Free</span>
       </div>
-      <div>
-        <span style="font-size: 12px; color: var(--text-muted);">Data is processed locally in your browser. Avoid entering sensitive data.</span>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="font-size: 12px; color: var(--text-muted);" data-i18n="subtitle">Data processed locally in your browser (Offline)</span>
+        <div class="lang-switcher">
+          <span style="font-size: 14px;">🌐</span>
+          <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="pt">Português</option>
+            <option value="zh">简体中文</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
       </div>
     </header>
 
     <div class="pro-banner">
       <div>
-        <strong style="color: #60a5fa;">Need TypeScript / Pydantic Types, SQL Inserts & PII Masking?</strong>
-        <p>DataStudio PRO includes Type Generators (Zod, TS, Python), Regex PII Masking, SQL Dialect Generator & Mock Data Builder.</p>
+        <strong style="color: #60a5fa;" data-i18n="pro_banner_h">Need TypeScript / Pydantic Types, SQL Inserts & PII Masking?</strong>
+        <p data-i18n="pro_banner_p">DataStudio PRO includes Type Generators (Zod, TS, Python), Regex PII Masking, SQL Dialect Generator & Mock Data Builder.</p>
       </div>
-      <a href="https://mcjinster.gumroad.com" target="_blank" class="pro-btn">Get DataStudio PRO</a>
+      <a href="https://mcjinster.gumroad.com" target="_blank" class="pro-btn" data-i18n="btn_get_pro">Get DataStudio PRO</a>
     </div>
 
     <div class="toolbar">
       <button class="btn btn-primary" onclick="convertJsonToCsv()">JSON &rarr; CSV</button>
       <button class="btn btn-primary" onclick="convertCsvToJson()">CSV &rarr; JSON</button>
       <button class="btn" onclick="convertJsonToMarkdown()">JSON &rarr; Markdown Table</button>
-      <button class="btn" onclick="formatJson()">Beautify JSON</button>
-      <button class="btn" onclick="minifyJson()">Minify JSON</button>
-      <button class="btn" onclick="loadSampleData()">Load Sample Data</button>
-      <button class="btn" onclick="clearAll()">Clear</button>
+      <button class="btn" onclick="formatJson()" data-i18n="btn_beautify">Beautify JSON</button>
+      <button class="btn" onclick="minifyJson()" data-i18n="btn_minify">Minify JSON</button>
+      <button class="btn" onclick="loadSampleData()" data-i18n="btn_sample">Load Sample Data</button>
+      <button class="btn" onclick="clearAll()" data-i18n="btn_clear">Clear</button>
     </div>
 
     <div class="grid">
       <div class="panel">
         <div class="panel-header">
-          <span>Input Data (JSON / CSV)</span>
+          <span data-i18n="panel_input">Input Data (JSON / CSV)</span>
           <span id="inputStats" style="font-size: 11px; color: var(--text-muted);">0 bytes</span>
         </div>
         <div class="panel-body">
           <textarea id="inputArea" placeholder='Paste JSON array or CSV text here...&#10;Example: [{"id": 1, "name": "Alice", "role": "Dev"}, {"id": 2, "name": "Bob", "role": "Designer"}]'></textarea>
           <div class="status-bar">
-            <span>Supports standard JSON array or CSV text</span>
-            <button class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="pasteClipboard()">Paste</button>
+            <span data-i18n="hint_input">Supports standard JSON array or CSV text</span>
+            <button class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="pasteClipboard()" data-i18n="btn_paste">Paste</button>
           </div>
         </div>
       </div>
 
       <div class="panel">
         <div class="panel-header">
-          <span>Output Data</span>
-          <div style="display: flex; gap: 6px;">
-            <button class="btn" style="padding: 2px 8px; font-size: 11px;" onclick="copyOutput()">Copy</button>
-            <button class="btn" style="padding: 2px 8px; font-size: 11px;" onclick="downloadOutput()">Download</button>
+          <span data-i18n="panel_output">Output Data</span>
+          <div>
+            <button class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="copyOutput()" data-i18n="btn_copy">Copy</button>
+            <button class="btn" style="padding: 3px 8px; font-size: 11px;" onclick="downloadOutput()" data-i18n="btn_download">Download</button>
           </div>
         </div>
         <div class="panel-body">
           <textarea id="outputArea" readonly placeholder="Output will appear here..."></textarea>
           <div class="status-bar">
             <span id="outputStats">0 bytes</span>
-            <span id="notifyMsg" style="color: #10b981; font-weight: 500;"></span>
+            <span id="formatBadge" style="color: var(--accent);">Ready</span>
           </div>
         </div>
       </div>
@@ -121,240 +137,398 @@
 
     <div class="table-container">
       <div class="table-header">
-        <div style="font-weight: 600; font-size: 13px;">Data Table Preview</div>
+        <span style="font-weight: 600; font-size: 13px;" data-i18n="panel_table">Data Table Preview</span>
         <input type="text" id="tableSearch" class="search-input" placeholder="Search rows..." oninput="filterTable()">
       </div>
       <div class="table-scroll">
         <table id="dataTable">
-          <thead>
-            <tr id="tableHead"><th>No data loaded</th></tr>
-          </thead>
-          <tbody id="tableBody">
-            <tr><td style="color: var(--text-muted); text-align: center; padding: 24px;">Paste JSON or CSV above and run conversion to preview</td></tr>
-          </tbody>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
   <script>
-    let currentRows = [];
-    let currentCols = [];
-    let lastOutputExt = 'txt';
+    const translations = {
+      en: {
+        title: "DataStudio Lite — Offline Data Converter & Table Formatter",
+        subtitle: "Data processed locally in your browser (Offline)",
+        pro_banner_h: "Need TypeScript / Pydantic Types, SQL Inserts & PII Masking?",
+        pro_banner_p: "DataStudio PRO includes Type Generators (Zod, TS, Python), Regex PII Masking, SQL Dialect Generator & Mock Data Builder.",
+        btn_get_pro: "Get DataStudio PRO",
+        btn_beautify: "Beautify JSON",
+        btn_minify: "Minify JSON",
+        btn_sample: "Load Sample Data",
+        btn_clear: "Clear",
+        panel_input: "Input Data (JSON / CSV)",
+        hint_input: "Supports standard JSON array or CSV text",
+        btn_paste: "Paste",
+        panel_output: "Output Data",
+        btn_copy: "Copy",
+        btn_download: "Download",
+        panel_table: "Data Table Preview",
+        search_placeholder: "Search rows...",
+        copied_alert: "Copied output to clipboard!",
+        empty_alert: "Input area is empty!"
+      },
+      es: {
+        title: "DataStudio Lite — Conversor de Datos y Formateador Offline",
+        subtitle: "Datos procesados localmente en su navegador (Offline)",
+        pro_banner_h: "¿Necesitas Tipos TypeScript/Pydantic, Inserciones SQL y Anonimización PII?",
+        pro_banner_p: "DataStudio PRO incluye Generadores de Tipos (Zod, TS, Python), Anonimización PII, Generador SQL y Creador de Datos Mock.",
+        btn_get_pro: "Obtener DataStudio PRO",
+        btn_beautify: "Formatear JSON",
+        btn_minify: "Minificar JSON",
+        btn_sample: "Cargar Datos de Muestra",
+        btn_clear: "Limpiar",
+        panel_input: "Datos de Entrada (JSON / CSV)",
+        hint_input: "Compatible con matriz JSON estándar o texto CSV",
+        btn_paste: "Pegar",
+        panel_output: "Datos de Salida",
+        btn_copy: "Copiar",
+        btn_download: "Descargar",
+        panel_table: "Vista Previa en Tabla",
+        search_placeholder: "Buscar filas...",
+        copied_alert: "¡Copiado al portapapeles!",
+        empty_alert: "¡El área de entrada está vacía!"
+      },
+      fr: {
+        title: "DataStudio Lite — Convertisseur de Données et Formateur Hors Ligne",
+        subtitle: "Données traitées localement dans votre navigateur (Hors Ligne)",
+        pro_banner_h: "Besoin de Types TypeScript/Pydantic, d'Inserts SQL et de Masquage PII ?",
+        pro_banner_p: "DataStudio PRO inclut des générateurs de types (Zod, TS, Python), le masquage PII, un générateur SQL et des données fictives.",
+        btn_get_pro: "Obtenir DataStudio PRO",
+        btn_beautify: "Embellir JSON",
+        btn_minify: "Minifier JSON",
+        btn_sample: "Charger Données Test",
+        btn_clear: "Effacer",
+        panel_input: "Données d'Entrée (JSON / CSV)",
+        hint_input: "Prend en charge tableau JSON ou texte CSV",
+        btn_paste: "Coller",
+        panel_output: "Données de Sortie",
+        btn_copy: "Copier",
+        btn_download: "Télécharger",
+        panel_table: "Aperçu du Tableau",
+        search_placeholder: "Rechercher des lignes...",
+        copied_alert: "Copié dans le presse-papiers !",
+        empty_alert: "La zone d'entrée est vide !"
+      },
+      pt: {
+        title: "DataStudio Lite — Conversor e Formatador de Dados Offline",
+        subtitle: "Dados processados localmente no seu navegador (Offline)",
+        pro_banner_h: "Precisa de Tipos TypeScript/Pydantic, Inserts SQL e Anonimização PII?",
+        pro_banner_p: "DataStudio PRO inclui Geradores de Tipos (Zod, TS, Python), Mascaramento PII, Gerador SQL e Dados Fictícios.",
+        btn_get_pro: "Obter DataStudio PRO",
+        btn_beautify: "Formatar JSON",
+        btn_minify: "Minificar JSON",
+        btn_sample: "Carregar Dados Exemplo",
+        btn_clear: "Limpar",
+        panel_input: "Dados de Entrada (JSON / CSV)",
+        hint_input: "Suporta array JSON padrão ou texto CSV",
+        btn_paste: "Colar",
+        panel_output: "Dados de Saída",
+        btn_copy: "Copiar",
+        btn_download: "Baixar",
+        panel_table: "Visualização em Tabela",
+        search_placeholder: "Buscar linhas...",
+        copied_alert: "Copiado para a área de transferência!",
+        empty_alert: "A área de entrada está vazia!"
+      },
+      zh: {
+        title: "DataStudio Lite — 离线数据转换器与表格格式化工具",
+        subtitle: "数据100%在本地浏览器运行处理，零数据泄露 (离线版)",
+        pro_banner_h: "需要 TypeScript/Pydantic 类型生成、SQL批量插入与隐私脱敏？",
+        pro_banner_p: "DataStudio PRO 提供完整的类型生成器 (Zod、TS、Python)、敏感PII掩码脱敏、SQL批量生成与模拟数据构建。",
+        btn_get_pro: "获取 DataStudio PRO",
+        btn_beautify: "格式化 JSON",
+        btn_minify: "压缩 JSON",
+        btn_sample: "加载示例数据",
+        btn_clear: "清空",
+        panel_input: "输入数据 (JSON / CSV)",
+        hint_input: "支持标准 JSON 数组或 CSV 文本",
+        btn_paste: "粘贴",
+        panel_output: "转换输出",
+        btn_copy: "复制",
+        btn_download: "下载文件",
+        panel_table: "数据表格实时预览",
+        search_placeholder: "筛选行数据...",
+        copied_alert: "已复制输出内容到剪贴板！",
+        empty_alert: "输入框为空！"
+      },
+      ja: {
+        title: "DataStudio Lite — オフラインデータコンバーター＆テーブルフォーマッター",
+        subtitle: "データはブラウザ内でローカル処理されます（完全オフライン）",
+        pro_banner_h: "TypeScript/Pydantic型定義、SQL一括挿入、個人情報マスキングが必要ですか？",
+        pro_banner_p: "DataStudio PROは型ジェネレーター (Zod, TS, Python)、正規表現PIIマスキング、SQL生成＆モックデータ作成ツールを搭載。",
+        btn_get_pro: "DataStudio PROを入手",
+        btn_beautify: "JSON整形",
+        btn_minify: "JSON圧縮",
+        btn_sample: "サンプルデータ読込",
+        btn_clear: "クリア",
+        panel_input: "入力データ (JSON / CSV)",
+        hint_input: "標準的なJSON配列またはCSVテキストに対応",
+        btn_paste: "貼り付け",
+        panel_output: "出力データ",
+        btn_copy: "コピー",
+        btn_download: "ダウンロード",
+        panel_table: "データテーブルプレビュー",
+        search_placeholder: "行を検索...",
+        copied_alert: "クリップボードにコピーしました！",
+        empty_alert: "入力エリアが空です！"
+      },
+      ko: {
+        title: "DataStudio Lite — 오프라인 데이터 컨버터 & 테이블 포매터",
+        subtitle: "모든 데이터는 브라우저 내부에서만 100% 로컬 처리됩니다 (오프라인)",
+        pro_banner_h: "TypeScript / Pydantic 타입 생성, SQL 벌크 생성 & PII 마스킹이 필요하신가요?",
+        pro_banner_p: "DataStudio PRO는 타입 생성기 (Zod, TS, Python), 개인정보(PII) 마스킹, SQL 방언 생성기 및 모의 데이터 생성기를 포함합니다.",
+        btn_get_pro: "DataStudio PRO 구매",
+        btn_beautify: "JSON 정렬",
+        btn_minify: "JSON 압축",
+        btn_sample: "샘플 데이터 로드",
+        btn_clear: "비우기",
+        panel_input: "입력 데이터 (JSON / CSV)",
+        hint_input: "표준 JSON 배열 또는 CSV 텍스트 지원",
+        btn_paste: "붙여넣기",
+        panel_output: "출력 데이터",
+        btn_copy: "복사",
+        btn_download: "다운로드",
+        panel_table: "데이터 테이블 실시간 미리보기",
+        search_placeholder: "행 검색...",
+        copied_alert: "출력 내용이 클립보드에 복사되었습니다!",
+        empty_alert: "입력 내용이 비어있습니다!"
+      }
+    };
 
-    const sampleJson = [
-      { id: 101, name: "Alexander Wright", email: "alex.w@enterprise.io", role: "Principal Engineer", country: "United States", status: "Active", salary: 145000 },
-      { id: 102, name: "Yuki Tanaka", email: "yuki.t@cloudcore.jp", role: "Product Designer", country: "Japan", status: "Active", salary: 98000 },
-      { id: 103, name: "Elena Rostova", email: "e.rostova@nexus.de", role: "Data Scientist", country: "Germany", status: "On Leave", salary: 112000 },
-      { id: 104, name: "Min-Jun Kim", email: "mj.kim@hypertech.kr", role: "Frontend Lead", country: "South Korea", status: "Active", salary: 128000 },
-      { id: 105, name: "Sophia Martinez", email: "s.martinez@solaris.es", role: "DevOps Architect", country: "Spain", status: "Pending", salary: 120000 }
-    ];
+    let currentLang = 'en';
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      try { localStorage.setItem('datastudio_lang', lang); } catch (e) {}
+
+      const t = translations[lang] || translations.en;
+      document.getElementById('pageTitle').textContent = t.title;
+      document.getElementById('tableSearch').placeholder = t.search_placeholder;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+    }
+
+    const inputArea = document.getElementById('inputArea');
+    const outputArea = document.getElementById('outputArea');
+    const inputStats = document.getElementById('inputStats');
+    const outputStats = document.getElementById('outputStats');
+    const formatBadge = document.getElementById('formatBadge');
+    let currentParsedData = [];
+
+    inputArea.addEventListener('input', () => {
+      inputStats.textContent = `${inputArea.value.length} chars`;
+    });
 
     function loadSampleData() {
-      document.getElementById('inputArea').value = JSON.stringify(sampleJson, null, 2);
-      updateStats();
-      convertJsonToCsv();
+      const sample = [
+        { id: 101, name: "Alexander Wright", email: "alex.w@enterprise.io", role: "Principal Engineer", country: "United States", status: "Active", salary: 145000 },
+        { id: 102, name: "Yuki Tanaka", email: "yuki.t@cloudcore.jp", role: "Product Designer", country: "Japan", status: "Active", salary: 98000 },
+        { id: 103, name: "Elena Rostova", email: "e.rostova@nexus.de", role: "Data Scientist", country: "Germany", status: "On Leave", salary: 112000 },
+        { id: 104, name: "Min-Jun Kim", email: "mj.kim@hypertech.kr", role: "Frontend Lead", country: "South Korea", status: "Active", salary: 128000 },
+        { id: 105, name: "Sophia Martinez", email: "s.martinez@solaris.es", role: "DevOps Architect", country: "Spain", status: "Pending", salary: 120000 }
+      ];
+      inputArea.value = JSON.stringify(sample, null, 2);
+      inputStats.textContent = `${inputArea.value.length} chars`;
+      currentParsedData = sample;
+      renderTable(sample);
     }
 
     function clearAll() {
-      document.getElementById('inputArea').value = '';
-      document.getElementById('outputArea').value = '';
-      currentRows = [];
-      currentCols = [];
-      renderTable([], []);
-      updateStats();
+      inputArea.value = '';
+      outputArea.value = '';
+      inputStats.textContent = '0 bytes';
+      outputStats.textContent = '0 bytes';
+      formatBadge.textContent = 'Cleared';
+      document.getElementById('tableHead').innerHTML = '';
+      document.getElementById('tableBody').innerHTML = '';
+      currentParsedData = [];
+    }
+
+    function parseInput() {
+      const text = inputArea.value.trim();
+      const t = translations[currentLang] || translations.en;
+      if (!text) {
+        alert(t.empty_alert);
+        return null;
+      }
+      if (text.startsWith('[') || text.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(text);
+          return Array.isArray(parsed) ? parsed : [parsed];
+        } catch (e) {
+          alert('JSON Syntax Error: ' + e.message);
+          return null;
+        }
+      } else {
+        return parseCSV(text);
+      }
+    }
+
+    function parseCSV(csv) {
+      const lines = csv.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
+        const obj = {};
+        headers.forEach((h, idx) => {
+          let val = values[idx] !== undefined ? values[idx] : '';
+          if (!isNaN(val) && val !== '') val = Number(val);
+          obj[h] = val;
+        });
+        result.push(obj);
+      }
+      return result;
+    }
+
+    function convertJsonToCsv() {
+      const data = parseInput();
+      if (!data || data.length === 0) return;
+      currentParsedData = data;
+      renderTable(data);
+      const headers = Object.keys(data[0]);
+      let csv = headers.join(',') + '\n';
+      data.forEach(row => {
+        csv += headers.map(h => {
+          let cell = row[h] === null || row[h] === undefined ? '' : String(row[h]);
+          if (cell.includes(',') || cell.includes('"')) {
+            cell = '"' + cell.replace(/"/g, '""') + '"';
+          }
+          return cell;
+        }).join(',') + '\n';
+      });
+      setOutput(csv.trim(), 'Converted to CSV');
+    }
+
+    function convertCsvToJson() {
+      const text = inputArea.value.trim();
+      const t = translations[currentLang] || translations.en;
+      if (!text) { alert(t.empty_alert); return; }
+      const data = parseCSV(text);
+      if (data.length === 0) {
+        alert('Invalid CSV data format.');
+        return;
+      }
+      currentParsedData = data;
+      renderTable(data);
+      setOutput(JSON.stringify(data, null, 2), 'Converted to JSON');
+    }
+
+    function convertJsonToMarkdown() {
+      const data = parseInput();
+      if (!data || data.length === 0) return;
+      currentParsedData = data;
+      renderTable(data);
+      const headers = Object.keys(data[0]);
+      let md = '| ' + headers.join(' | ') + ' |\n';
+      md += '| ' + headers.map(() => '---').join(' | ') + ' |\n';
+      data.forEach(row => {
+        md += '| ' + headers.map(h => String(row[h] !== undefined ? row[h] : '')).join(' | ') + ' |\n';
+      });
+      setOutput(md.trim(), 'Markdown Table');
+    }
+
+    function formatJson() {
+      const data = parseInput();
+      if (!data) return;
+      currentParsedData = data;
+      renderTable(data);
+      setOutput(JSON.stringify(data, null, 2), 'Beautified JSON');
+    }
+
+    function minifyJson() {
+      const data = parseInput();
+      if (!data) return;
+      currentParsedData = data;
+      renderTable(data);
+      setOutput(JSON.stringify(data), 'Minified JSON');
+    }
+
+    function setOutput(content, badge) {
+      outputArea.value = content;
+      outputStats.textContent = `${content.length} chars`;
+      formatBadge.textContent = badge;
+    }
+
+    function renderTable(data) {
+      const thead = document.getElementById('tableHead');
+      const tbody = document.getElementById('tableBody');
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) return;
+      const headers = Object.keys(data[0]);
+      let headHtml = '<tr>';
+      headers.forEach(h => headHtml += `<th>${h}</th>`);
+      headHtml += '</tr>';
+      thead.innerHTML = headHtml;
+      let bodyHtml = '';
+      data.forEach(row => {
+        bodyHtml += '<tr>';
+        headers.forEach(h => {
+          bodyHtml += `<td>${row[h] !== undefined ? row[h] : ''}</td>`;
+        });
+        bodyHtml += '</tr>';
+      });
+      tbody.innerHTML = bodyHtml;
+    }
+
+    function filterTable() {
+      const q = document.getElementById('tableSearch').value.toLowerCase();
+      if (!currentParsedData || currentParsedData.length === 0) return;
+      const filtered = currentParsedData.filter(row => {
+        return Object.values(row).some(v => String(v).toLowerCase().includes(q));
+      });
+      renderTable(filtered);
+    }
+
+    function copyOutput() {
+      if (!outputArea.value) return;
+      navigator.clipboard.writeText(outputArea.value).then(() => {
+        const t = translations[currentLang] || translations.en;
+        alert(t.copied_alert);
+      });
+    }
+
+    function downloadOutput() {
+      if (!outputArea.value) return;
+      const isJson = outputArea.value.trim().startsWith('{') || outputArea.value.trim().startsWith('[');
+      const isMd = outputArea.value.trim().startsWith('|');
+      const ext = isJson ? 'json' : (isMd ? 'md' : 'csv');
+      const blob = new Blob([outputArea.value], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `datastudio-export.${ext}`;
+      a.click();
     }
 
     async function pasteClipboard() {
       try {
         const text = await navigator.clipboard.readText();
-        document.getElementById('inputArea').value = text;
-        updateStats();
+        inputArea.value = text;
+        inputStats.textContent = `${text.length} chars`;
       } catch (e) {
-        alert("Clipboard paste permission required or not supported in this context.");
+        alert('Clipboard access denied.');
       }
     }
 
-    function showNotify(msg) {
-      const el = document.getElementById('notifyMsg');
-      el.textContent = msg;
-      setTimeout(() => { el.textContent = ''; }, 3000);
-    }
-
-    function copyOutput() {
-      const out = document.getElementById('outputArea');
-      if (!out.value) return;
-      navigator.clipboard.writeText(out.value);
-      showNotify("Copied to clipboard!");
-    }
-
-    function downloadOutput() {
-      const text = document.getElementById('outputArea').value;
-      if (!text) return;
-      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `datastudio-export.${lastOutputExt}`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    function updateStats() {
-      const inp = document.getElementById('inputArea').value;
-      document.getElementById('inputStats').textContent = `${inp.length.toLocaleString()} chars`;
-      const out = document.getElementById('outputArea').value;
-      document.getElementById('outputStats').textContent = `${out.length.toLocaleString()} chars`;
-    }
-
-    function parseInput() {
-      const raw = document.getElementById('inputArea').value.trim();
-      if (!raw) throw new Error("Input is empty.");
-      if (raw.startsWith('[') || raw.startsWith('{')) {
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [parsed];
-      } else {
-        return parseCSV(raw);
+    // Auto-detect saved language or default to 'en'
+    try {
+      const saved = localStorage.getItem('datastudio_lang');
+      if (saved && translations[saved]) {
+        document.getElementById('langSelect').value = saved;
+        changeLanguage(saved);
       }
-    }
+    } catch (e) {}
 
-    function parseCSV(text) {
-      const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-      if (lines.length === 0) return [];
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
-      const rows = [];
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
-        const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = values[idx] !== undefined ? values[idx] : "";
-        });
-        rows.push(obj);
-      }
-      return rows;
-    }
-
-    function convertJsonToCsv() {
-      try {
-        const data = parseInput();
-        if (data.length === 0) return;
-        const keys = Object.keys(data[0]);
-        let csv = keys.join(',') + '\n';
-        data.forEach(row => {
-          csv += keys.map(k => {
-            let val = row[k] !== undefined && row[k] !== null ? String(row[k]) : "";
-            if (val.includes(',') || val.includes('"') || val.includes('\n')) {
-              val = '"' + val.replace(/"/g, '""') + '"';
-            }
-            return val;
-          }).join(',') + '\n';
-        });
-        document.getElementById('outputArea').value = csv;
-        lastOutputExt = 'csv';
-        updateStats();
-        showNotify("Converted to CSV");
-        currentRows = data;
-        currentCols = keys;
-        renderTable(currentRows, currentCols);
-      } catch (e) {
-        alert("Parsing Error: " + e.message);
-      }
-    }
-
-    function convertCsvToJson() {
-      try {
-        const raw = document.getElementById('inputArea').value.trim();
-        const data = parseCSV(raw);
-        document.getElementById('outputArea').value = JSON.stringify(data, null, 2);
-        lastOutputExt = 'json';
-        updateStats();
-        showNotify("Converted to JSON");
-        if (data.length > 0) {
-          currentRows = data;
-          currentCols = Object.keys(data[0]);
-          renderTable(currentRows, currentCols);
-        }
-      } catch (e) {
-        alert("Parsing Error: " + e.message);
-      }
-    }
-
-    function convertJsonToMarkdown() {
-      try {
-        const data = parseInput();
-        if (data.length === 0) return;
-        const keys = Object.keys(data[0]);
-        let md = '| ' + keys.join(' | ') + ' |\n';
-        md += '| ' + keys.map(() => '---').join(' | ') + ' |\n';
-        data.forEach(row => {
-          md += '| ' + keys.map(k => String(row[k] ?? '').replace(/\|/g, '\\|')).join(' | ') + ' |\n';
-        });
-        document.getElementById('outputArea').value = md;
-        lastOutputExt = 'md';
-        updateStats();
-        showNotify("Converted to Markdown Table");
-        currentRows = data;
-        currentCols = keys;
-        renderTable(currentRows, currentCols);
-      } catch (e) {
-        alert("Parsing Error: " + e.message);
-      }
-    }
-
-    function formatJson() {
-      try {
-        const raw = document.getElementById('inputArea').value.trim();
-        const obj = JSON.parse(raw);
-        document.getElementById('outputArea').value = JSON.stringify(obj, null, 2);
-        lastOutputExt = 'json';
-        updateStats();
-        showNotify("JSON Beautified");
-      } catch (e) {
-        alert("Invalid JSON: " + e.message);
-      }
-    }
-
-    function minifyJson() {
-      try {
-        const raw = document.getElementById('inputArea').value.trim();
-        const obj = JSON.parse(raw);
-        document.getElementById('outputArea').value = JSON.stringify(obj);
-        lastOutputExt = 'json';
-        updateStats();
-        showNotify("JSON Minified");
-      } catch (e) {
-        alert("Invalid JSON: " + e.message);
-      }
-    }
-
-    function renderTable(rows, cols) {
-      const thead = document.getElementById('tableHead');
-      const tbody = document.getElementById('tableBody');
-      if (!cols || cols.length === 0) {
-        thead.innerHTML = '<th>No data</th>';
-        tbody.innerHTML = '<tr><td style="color: var(--text-muted); text-align: center; padding: 24px;">No data loaded</td></tr>';
-        return;
-      }
-      thead.innerHTML = cols.map(c => `<th>${escapeHtml(c)}</th>`).join('');
-      tbody.innerHTML = rows.map(r => `<tr>${cols.map(c => `<td>${escapeHtml(String(r[c] ?? ''))}</td>`).join('')}</tr>`).join('');
-    }
-
-    function filterTable() {
-      const q = document.getElementById('tableSearch').value.toLowerCase();
-      if (!q) {
-        renderTable(currentRows, currentCols);
-        return;
-      }
-      const filtered = currentRows.filter(r => {
-        return currentCols.some(c => String(r[c] ?? '').toLowerCase().includes(q));
-      });
-      renderTable(filtered, currentCols);
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    document.getElementById('inputArea').addEventListener('input', updateStats);
     loadSampleData();
   </script>
 </body>
