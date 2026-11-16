@@ -39,6 +39,17 @@ Never upload confidential client payloads, customer records, or proprietary JSON
 
 ---
 
+
+---
+
+## 📸 Visual Walkthrough & Feature Showcase
+
+### 1. Interactive Tabular Explorer & Multi-Format Converter
+![Interactive Tabular Explorer](./assets/gallery-01.png)
+
+### 2. Schema Generators (TS, Pydantic, Zod) & Regex PII Masking
+![Schema Generators & PII Masking](./assets/gallery-02.png)
+
 ## ⚖️ Edition Comparison
 
 | Feature | DataStudio Lite (Free) | DataStudio PRO ($12) |
