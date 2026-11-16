@@ -1,3 +1,4 @@
+
 # DataStudio Lite
 
 ### Free Offline JSON, CSV & Markdown Data Converter
@@ -8,7 +9,7 @@ DataStudio Lite is a free, single-file browser application for working with JSON
 
 Whether you're preparing sample datasets, converting structured information, or formatting JSON for easier reading, DataStudio Lite provides practical conversion tools in one lightweight interface.
 
-> **Language notice:** The application interface is in Korean (한국어). This README provides English-language documentation.
+> **Language notice:** The application interface is in English. This README provides English-language documentation.
 
 ### [Launch the Free Live Demo](https://mcjin87-eng.github.io/datastudio-offline-converter/)
 
@@ -29,7 +30,7 @@ Whether you're preparing sample datasets, converting structured information, or 
 ### Additional Tools
 
 - **Editable input area** — Enter or paste JSON and CSV content.
-- **Editable output area** — View and modify generated text.
+- **Output area** — View and copy generated text; the output field is read-only.
 - **Table preview** — Inspect conversion results in a table.
 - **Sample data** — Explore the interface using provided examples.
 - **Download output** — Download generated content.
@@ -52,7 +53,7 @@ Open:
 4. Review the generated output and table preview where applicable.
 5. Edit or download the result as needed.
 
-The interface controls are labeled in Korean.
+The interface controls are labeled in English.
 
 ### Option 2: Run Locally
 
@@ -283,10 +284,10 @@ Download `index.html` and open it directly in a compatible browser.
 
 DataStudio Lite is intentionally focused on lightweight data conversion and formatting.
 
-- **Korean interface:** The current application UI is in Korean.
+- **Interface language:** The current application UI is in English.
 - **JSON input:** JSON-to-CSV and JSON-to-Markdown workflows are intended for JSON arrays.
 - **Data structures:** Complex nested objects and arrays may not translate cleanly into flat CSV or Markdown tables.
-- **CSV interpretation:** Do not assume automatic data-type detection or support for every CSV dialect.
+- **CSV interpretation:** The simple parser may not reliably handle quoted fields containing commas or embedded newlines. Do not assume automatic data-type detection or support for every CSV dialect.
 - **Formatting differences:** Output structure, escaping, and field handling depend on the implemented conversion logic.
 - **Large datasets:** Browser performance may vary with input size and device resources.
 - **Advanced tools:** Type generation, PII masking, SQL dialect generation, and mock data creation are not Lite features.
@@ -354,4 +355,4 @@ Convert JSON, CSV, and Markdown table data without setting up a backend or using
 
 **[Explore the Optional PRO Offering](https://mcjinster.gumroad.com)**
 
-*DataStudio Lite is a free tool with a Korean-language interface. PRO is a separate, optional offering.*
+*DataStudio Lite is a free tool with an English-language interface. PRO is a separate, optional offering.*
