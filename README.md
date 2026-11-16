@@ -6,6 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Interactive Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-success)](https://mcjin87-eng.github.io/datastudio-offline-converter/)
 [![i18n: 7 Languages](https://img.shields.io/badge/i18n-7_Languages_Supported-green.svg)](#)
+[![Gumroad Pro](https://img.shields.io/badge/Gumroad-PRO_Edition_$12-pink)](https://mcjinster.gumroad.com/l/wrqkpr)
 [![Privacy First](https://img.shields.io/badge/Privacy-Zero_Telemetry_GDPR_HIPAA-purple)](#)
 
 ---
@@ -57,7 +58,7 @@ Never upload confidential client payloads, customer records, or proprietary JSON
 
 ## 📥 Get DataStudio
 - **Free Lite Edition**: [Download Free on GitHub](https://mcjin87-eng.github.io/datastudio-offline-converter/) or clone this repo.
-- **PRO Edition ($12)**: Available on Gumroad with Enterprise Offline Suite.
+- **PRO Edition ($12)**: 👉 [Purchase DataStudio PRO on Gumroad ($12)](https://mcjinster.gumroad.com/l/wrqkpr)
 
 ## 📄 License
 MIT License — Copyright (c) 2026 mcjin87-eng.
